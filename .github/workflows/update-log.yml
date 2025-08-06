@@ -2,28 +2,24 @@ name: Update Log
 
 on:
   schedule:
-    - cron: '0 5 * * *' # every day at 5 AM UTC
+    - cron: '0 5 * * *' # Runs daily at 5AM UTC
   workflow_dispatch:
 
 jobs:
   commit:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Git
-        run: |
-          git config --global user.name "Harish Subburaj"
-          git config --global user.email "harish-liv-cr7@users.noreply.github.com"
-
-      - name: Make a change
+      - name: Make a change to activity.md
         run: |
           echo "$(date)" >> activity.md
 
-      - name: Commit and push
-        run: |
-          git add activity.md
-          git commit -m "." || echo "No changes to commit"
-          git push origin main
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "."
